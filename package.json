@@ -1,0 +1,28 @@
+{
+  "name": "nodetokyo",
+  "version": "1.0.8",
+  "description": "NodeTokyo - AI-Powered Stealth Assistant. Run anywhere with node.",
+  "main": "launcher.js",
+  "bin": {
+    "nodetokyo": "launcher.js"
+  },
+  "files": [
+    "launcher.js",
+    "client/noderzero.py"
+  ],
+  "scripts": {
+    "start": "node launcher.js"
+  },
+  "keywords": [
+    "ai",
+    "assistant",
+    "gemini",
+    "stealth",
+    "cli"
+  ],
+  "author": "nodetokyo",
+  "license": "MIT",
+  "dependencies": {
+    "@google/generative-ai": "^0.21.0"
+  }
+}
