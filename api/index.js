@@ -1,4 +1,4 @@
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+const { GoogleGenAI } = require('@google/genai');
 
 // Gemini model to use
 const MODEL_NAME = 'gemini-3.1-flash-lite';
@@ -57,8 +57,7 @@ module.exports = async (req, res) => {
         // Pick prompt based on mode, default to dsa
         const systemPrompt = SYSTEM_PROMPTS[mode] || SYSTEM_PROMPTS.dsa;
 
-        const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ model: MODEL_NAME });
+        const genAI = new GoogleGenAI({ apiKey });
 
         let result;
 
@@ -67,23 +66,32 @@ module.exports = async (req, res) => {
             const prompt = (mode === 'ocr' || mode === 'copypaste')
                 ? systemPrompt
                 : systemPrompt + '\n\nAnalyze the screenshot below and answer the question shown in it.';
-            result = await model.generateContent([
-                prompt,
-                {
-                    inlineData: {
-                        mimeType: 'image/jpeg',
-                        data: image,
-                    },
-                },
-            ]);
+            result = await genAI.models.generateContent({
+                model: MODEL_NAME,
+                contents: [{
+                    role: 'user',
+                    parts: [
+                        { text: prompt },
+                        {
+                            inlineData: {
+                                mimeType: 'image/jpeg',
+                                data: image,
+                            },
+                        },
+                    ],
+                }],
+            });
         } else if (text && text.trim().length > 0) {
             // Text Mode: clipboard content
-            result = await model.generateContent(`${systemPrompt}\n\nQuestion:\n${text}`);
+            result = await genAI.models.generateContent({
+                model: MODEL_NAME,
+                contents: [{ role: 'user', parts: [{ text: `${systemPrompt}\n\nQuestion:\n${text}` }] }],
+            });
         } else {
             return res.status(400).json({ error: 'No input provided. Send text or image.' });
         }
 
-        const answer = result.response.text().trim();
+        const answer = result.text.trim();
         return res.status(200).json({ answer });
 
     } catch (err) {
