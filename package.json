@@ -1,6 +1,6 @@
 {
   "name": "nodetokyo",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "NodeTokyo - AI-Powered Stealth Assistant. Run anywhere with node.",
   "main": "launcher.js",
   "bin": {
