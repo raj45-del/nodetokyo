@@ -1,7 +1,7 @@
 const { GoogleGenAI } = require('@google/genai');
 
 // Gemini model to use
-const MODEL_NAME = 'gemini-3.1-flash-lite';
+const MODEL_NAME = 'gemini-2.5-flash';
 
 
 // Mode-specific system prompts
